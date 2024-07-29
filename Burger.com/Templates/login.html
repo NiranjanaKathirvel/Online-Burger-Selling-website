@@ -1,0 +1,53 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <script src="https://kit.fontawesome.com/9cc93e453a.js" crossorigin="anonymous"></script>
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+  <title>Brrrgrrr.com</title>
+</head>
+<body>
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <div id="login_content">
+    <div id="login_img"></div>
+    <header>
+      <div id="login_header">
+        <h1><a href="{{ url_for('index') }}">Brrrgrrr</a></h1>
+      </div>
+    </header>
+
+    <div id="login_form">
+      <form action="{{ url_for('login') }}" method="POST" autocompletion="on">
+        {{ form.hidden_tag() }}
+        <h2>Login</h2>
+        <div>
+          <div class="email"><input type="email" name="email" placeholder="Email"></div>
+          {% for error in form.email.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+          {% endfor %}
+          <span id="login_username_icon"><i class="fa-solid fa-user fa-lg"></i></span>
+        </div>
+        <div>
+          <div class="password"><input type="password" name="password" placeholder="Password"></div>
+          {% for error in form.password.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+          {% endfor %}
+          <span id="login_password_icon"><i class="fa-solid fa-lock fa-lg"></i></span>
+        </div>
+        <div class="span">{{ form.remember_me() }} {{ form.remember_me.label }}</div>
+        {{ form.submit(class="btn btn-primary") }}
+        <div class="register"><p>Doesn't have an account?<a href="{{ url_for('signup') }}">Register</a></p></div>
+      </form>
+    </div>
+  </div>
+</body>
+</html>

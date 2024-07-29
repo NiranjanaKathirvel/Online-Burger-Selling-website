@@ -1,0 +1,155 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <script src="https://kit.fontawesome.com/9cc93e453a.js" crossorigin="anonymous"></script>
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+  <title>Brrrgrrr.com</title>
+</head>
+<body>
+  <div id="home">
+    <div id="backimg"></div>
+  <header>
+    <div class="header">
+    <h2>Brrrgrrr</h2>
+    <ul>
+      <li><a href="#home">Home</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#menu">Menu</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+      <div>
+        {% if session.user_id %}
+          <button class="log"><a href="{{ url_for('logout') }}">Logout</a></button>
+        {% else %}
+          <button class="log"><a href="{{ url_for('login') }}">Login</a></button>
+          <button class="sign"><a href="{{ url_for('signup') }}">Signup</a></button>
+        {% endif %}
+      </div>
+    </div>
+  </header>
+
+    <div id="homecontent">
+     <h1>Customize Your Burger</h1>
+     <p>Craft your personalized burger masterpiece<br>using an assortment of top-quality ingredients</p>
+     {% if session.user_id %}
+     <a href="{{ url_for('customize') }}" id="order_btn"><button>ORDER</button></a>
+   {% else %}
+     <a href="{{ url_for('login') }}" id="order_btn"><button>ORDER</button></a>
+   {% endif %}     </div>
+    </div>
+
+  <div id="about">
+      <h1>About</h1>
+      <div id="aboutcontent">
+      <img id="aboutimg" src="static/images/aboutimg.jfif">
+  <main>
+    <section>
+      <h2>Welcome to Brrrgrrr</h2>
+      <p>At brrrgrrr,we're dedicated to serving the finest,juiciest<br>
+         burgers that will tantalize your taste buds.Our mission is to provide<br>
+        a unique dining experience where flavor meets passion.Since our<br>
+        establishment,we have been committed to using only the freshest<br>
+        ingredients and creating handcrafted burgers that will leave you craving.</p>
+  </section>
+
+  <section>
+    <h2>A Burger for Every Palate</h2>
+    <p>We understand that everyone has different tastes and preferences<br>
+      when it comes to burgers. That's why our menu offers a wide variety<br>
+      of options tocater to every palate.Vegetarian and vegan options are<br>
+      also available,ensuring that everyone can enjoy a delicious burger at Brrrgrrr.</p>
+  </section>
+  </main>
+ </div>
+    </div>
+
+    <div id="menu">
+      <h1>Menu</h1>
+      <div id="menu_contents">
+          <div class="menu_items">
+            <div id="classic_burger">
+              <img src="static/images/classic burger.jpg" alt="classic burger">
+              <h2>Classic Burger</h2>
+              <p>A simple burger made with a ground beef patty, usually cooked on a grill or stovetop
+                served on a soft bun, and topped with lettuce, tomato, onion, and pickles.</p>
+            </div>
+            <div id="cheese_burger">
+              <img src="static/images/cheese burger.png" alt="cheese burger">
+              <h2>Cheese Burger</h2>
+              <p>Similar to a classic hamburger, but with the addition of cheese, which is
+                often melted on top of the patty.</p>
+            </div>
+            <div id="veg_burger">
+              <img src="static/images/veg burger.jfif" alt="veg burger">
+              <h2>Veg Burger</h2>
+              <p>
+                A vegetarian or vegan alternative to meat-based burgers, veggie burgers
+                are made from a variety of plant-based ingredients like beans, lentils.
+              </p>
+            </div>
+            <div id="bbq_burger">
+              <img src="static/images/bbq burger.jpg" alt="BBQ burger">
+              <h2>BBQ Burger</h2>
+              <p>The BBQ burger is a delicious combination of a perfectly grilled beef patty,
+                smothered in tangy barbecue sauce and topped with caramelized onions and melted cheese.</p>
+            </div>
+            <div id="chicken_burger">
+              <img src="static/images/chicken burger.jfif" alt="chicken burger">
+              <h2>Chicken Burger</h2>
+              <p>Instead of beef, chicken burgers use a ground or marinated chicken patty.
+                They can be grilled, fried, or breaded and served with lettuce, tomato, onion.</p>
+            </div>
+            <div id="fish_burger">
+              <img src="static/images/fish burger.jfif" alt="Fish burger">
+              <h2>Fish Burger</h2>
+              <p>Fish burgers are typically made with a breaded or grilled fish fillet.
+                Common fish options include cod, salmon, or tuna.</p>
+            </div>
+          </div>
+      </div>
+    </div>
+
+    <div id="contact">
+      <h1>Contact</h1>
+      <div id="contact_content">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d248828.10361639253!2d77.33570573076537!3d12.97574577378486!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae214007e4bc3f%3A0xaadb0832c2758993!2sExposys%20Data%20Labs!5e0!3m2!1sen!2sin!4v1688146391128!5m2!1sen!2sin"
+         width="450" height="530" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        <div id="form">
+          <div id="icons-container">
+         <div class="icons">
+            <i class="fa-solid fa-phone"></i>
+            <h3>phone</h3>
+            <p>+123-456-7890</p>
+          </div>
+
+          <div class="icons">
+            <i class="fa-solid fa-envelope"></i>
+            <h3>Email</h3>
+            <p>exposysdatalabs@gmail.com</p>
+          </div>
+
+          <div class="icons">
+            <i class="fa-solid fa-location-dot"></i>
+            <h3>address</h3>
+            <p>Bangalore,india.</p>
+          </div>
+            </div>
+            <form action="#">
+              <h3>Get In Touch</h3>
+
+              <input type="text" id="name" placeholder="Fullname"><br>
+              <input type="email" id="email" placeholder="Email"><br>
+              <input type="text" id="phone"placeholder="Phone"><br>
+              <textarea id="message" placeholder="Send Message"></textarea><br>
+              <button id="send-btn">Send message</button>
+            </form>
+
+          </div>
+      </div>
+      </div>
+    </div>
+</body>
+</html>

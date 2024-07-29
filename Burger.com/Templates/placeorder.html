@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Summary</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+    <div id="invoice">
+        <h1>Place Your Order</h1>
+        <div id="order-summary">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 150px;">Ingredient</th>
+                        <th style="width: 150px;">Quantity</th>
+                        <th style="width: 150px;">Price per Unit</th>
+                        <th style="width: 150px;">Total Price</th>
+                    </tr>
+                </thead>
+                <tbody id="order-details">
+                    <!-- Order details will be populated by JavaScript -->
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="3"><strong>Total:</strong></td>
+                        <td id="grand-total"></td>
+                    </tr>
+                </tfoot>
+            </table>
+            <div class="button" id="place-order">Place Order</div>
+        </div>
+    </div>
+
+    <div id="overlaybox" class="hidden">
+        <h3>Your Order has been Placed</h3>
+        <label class="checkbox-container">
+            <input class="custom-checkbox" checked="" type="checkbox">
+            <span class="checkmark"></span>
+        </label>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const orderData = JSON.parse(sessionStorage.getItem('orderData'));
+
+            if (orderData) {
+                const orderDetails = document.getElementById('order-details');
+                orderData.ingredients.forEach(ingredient => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${ingredient.name}</td>
+                        <td>${ingredient.quantity}</td>
+                        <td>${ingredient.price.toFixed(2)}</td>
+                        <td>${(ingredient.price * ingredient.quantity).toFixed(2)}</td>
+                    `;
+                    orderDetails.appendChild(row);
+                });
+
+                const grandTotal = document.getElementById('grand-total');
+                grandTotal.textContent = orderData.totalPrice.toFixed(2);
+            } else {
+                const row = document.createElement('tr');
+                row.innerHTML = `<td colspan="4">No order data found. Please customize your burger first.</td>`;
+                document.getElementById('order-details').appendChild(row);
+            }
+        });
+
+        document.getElementById('place-order').addEventListener('click', function () {
+            // Place order functionality (e.g., send data to the server)
+            const overlaybox = document.getElementById('overlaybox');
+            const invoice = document.getElementById('invoice');
+            invoice.style.opacity = "0.4";
+            overlaybox.style.display = "block";
+        });
+
+        function placeOrder() {
+            const orderData = [
+                // Example data structure
+                { ingredient_id: 1, quantity: 2 },
+                { ingredient_id: 2, quantity: 1 },
+            ];
+        
+            fetch('/placeorder', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ order_data: orderData }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = '/';
+                } else {
+                    alert('Order failed: ' + data.message);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+        
+    </script>
+</body>
+
+</html>

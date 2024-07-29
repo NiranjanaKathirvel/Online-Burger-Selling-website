@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customize Your Burger</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="script.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="container1">
+        <h1>Customize Your Burger</h1>
+
+        <!-- Step 1: Choose Bun -->
+        <div class="step" id="step-bun">
+            <h2>1. Choose Your Bun</h2>
+            <div class="options" id="bun-options"></div>
+        </div>
+
+        <!-- Step 2: Choose Protein -->
+        <div class="step" id="step-protein">
+            <h2>2. Choose Your Protein</h2>
+            <div class="options" id="protein-options"></div>
+        </div>
+
+        <!-- Step 3: Choose Toppings -->
+        <div class="step" id="step-toppings">
+            <h2>3. Choose Your Toppings</h2>
+            <div class="options" id="topping-options"></div>
+        </div>
+
+        <!-- Step 4: Choose Sauces -->
+        <div class="step" id="step-sauces">
+            <h2>4. Choose Your Sauces</h2>
+            <div class="options" id="sauce-options"></div>
+        </div>
+    </div>
+
+        <div class="sidebox">
+        <!-- Quantity Section -->
+        <div class="quantity-container" id="quantity-container">
+            <h2>Quantity of Selected Ingredients</h2>
+            <p id="quantityerror"></p>
+        </div>
+
+        <!-- Preview Section -->
+        <div class="preview">
+            <h2>Your Burger:</h2>
+            <p id="burger-preview">No ingredients selected yet.</p>
+            <div class="button1" id="add-to-cart">Add to orders</div>
+        </div>
+    </div>
+</div>
+
+    <!-- Order Summary Section -->
+    <!-- <div class="order-summary" id="order-summary">
+        <h2>Your Orders:</h2>
+        <ul id="order-list">
+            <li>No orders yet.</li>
+        </ul>
+        <div class="button2" id="proceed-to-checkout">Place Order</div>
+    </div> -->
+    <script>
+        const buns = [
+            { name: 'Brioche Bun', price: 10, description: 'A soft, buttery bun perfect for any burger.', image: 'static/images/broiche buns.jfif' },
+            { name: 'Whole Wheat Bun', price: 10, description: 'A healthier option made with whole grains.', image: 'static/images/whole_wheat.jfif' },
+            { name: 'Gluten-Free Bun', price: 10, description: 'A tasty bun for those avoiding gluten.', image: 'static/images/gluten_free.jfif' },
+            { name: 'Sesame Seed Bun', price: 10, description: 'A classic bun topped with sesame seeds.', image: 'static/images/sesame_seed.jfif' }
+        ];
+
+        const proteins = [
+            { name: 'Beef Patty', price: 35, description: 'Juicy, seasoned beef patty.', image: 'static/images/Beef_patty.jfif' },
+            { name: 'Chicken Patty', price: 30, description: 'Grilled or fried chicken patty.', image: 'static/images/chicken_patty.jfif' },
+            { name: 'Veggie Patty', price: 25, description: 'A flavorful, plant-based patty.', image: 'static/images/veggie_patty.jfif' },
+            { name: 'Turkey Patty', price: 30, description: 'Lean turkey patty with herbs.', image: 'static/images/turkey_patty.jfif' }
+        ];
+
+        const toppings = [
+            { name: 'Lettuce', price: 10, description: 'Crisp, fresh lettuce leaves.', image: 'static/images/lettuce.jfif' },
+            { name: 'Tomato', price: 5, description: 'Sliced ripe tomatoes.', image: 'static/images/tomato.jfif' },
+            { name: 'Cheddar Cheese', price: 10, description: 'Melted cheddar cheese.', image: 'static/images/cheddar_cheese.jfif' },
+            { name: 'Bacon', price: 10, description: 'Crispy bacon strips.', image: 'static/images/bacon.jfif' },
+            { name: 'Onions', price: 5, description: 'Fresh or grilled onions.', image: 'static/images/onions.jfif' },
+            { name: 'Pickles', price: 5, description: 'Tangy pickle slices.', image: 'static/images/pickles.jfif' }
+        ];
+
+        const sauces = [
+            { name: 'Ketchup', price: 10, description: 'Classic tomato ketchup.', image: 'static/images/ketchup.jfif' },
+            { name: 'Mayo', price: 10, description: 'Creamy mayonnaise.', image: 'static/images/mayo.jfif' },
+            { name: 'BBQ Sauce', price: 10, description: 'Smoky barbecue sauce.', image: 'static/images/bbq_sauce.jfif' },
+            { name: 'Ranch', price: 5, description: 'Creamy ranch dressing.', image: 'static/images/ranch.jfif' },
+            { name: 'Sriracha', price: 5, description: 'Spicy sriracha sauce.', image: 'static/images/sriracha.jfif' }
+        ];
+
+        // Function to create checkboxes for ingredients
+        function createCheckboxes(ingredients, containerId) {
+            const container = document.getElementById(containerId);
+            ingredients.forEach(ingredient => {
+                const option = document.createElement('div');
+                option.classList.add('option');
+
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.name = containerId;
+                checkbox.value = ingredient.name;
+                checkbox.dataset.price = ingredient.price;
+                checkbox.style.display = 'none';
+
+                const img = document.createElement('img');
+                img.src = ingredient.image;
+                img.alt = ingredient.name;
+
+                const price = document.createElement('label');
+                price.textContent = `${ingredient.name} - ${ingredient.price.toFixed(2)}`;
+
+                const label = document.createElement('label');
+                label.textContent = `(${ingredient.description})`;
+
+                option.appendChild(checkbox);
+                option.appendChild(img);
+                option.appendChild(price);
+
+                container.appendChild(option);
+
+                // Make the whole option clickable
+                option.addEventListener('click', function () {
+                    checkbox.checked = !checkbox.checked;
+                    checkbox.dispatchEvent(new Event('change'));
+                });
+            });
+        }
+
+        // Create checkboxes for each step
+        createCheckboxes(buns, 'bun-options');
+        createCheckboxes(proteins, 'protein-options');
+        createCheckboxes(toppings, 'topping-options');
+        createCheckboxes(sauces, 'sauce-options');
+
+        // Update preview and total price
+        const selectedIngredients = {
+            'bun-options': [],
+            'protein-options': [],
+            'topping-options': [],
+            'sauce-options': []
+        };
+
+        function updatePreviewAndPrice() {
+            const preview = document.getElementById('burger-preview');
+            const totalPriceElem = document.getElementById('total-price');
+
+            let previewText = '';
+            let totalPrice = 0;
+
+            for (let category in selectedIngredients) {
+                selectedIngredients[category].forEach(ingredient => {
+                    const quantity = ingredient.quantity || 1; // Default to 1 if quantity is not defined
+                    previewText += `${ingredient.name} (${quantity}), `;
+                    totalPrice += ingredient.price * quantity;
+                });
+            }
+
+            preview.textContent = previewText.slice(0, -2) || 'No ingredients selected yet.';
+            totalPriceElem.textContent = `${totalPrice.toFixed(2)}`;
+        }
+
+        // Attach event listeners to checkboxes
+        document.querySelectorAll('input[type=checkbox]').forEach(checkbox => {
+            checkbox.addEventListener('change', function () {
+                const category = this.name;
+                const ingredient = { name: this.value, price: parseFloat(this.dataset.price) };
+
+                if (this.checked) {
+                    selectedIngredients[category].push(ingredient);
+                    this.closest('.option').classList.add('selected'); // Add selected class
+                    addQuantityInput(ingredient);
+                } else {
+                    selectedIngredients[category] = selectedIngredients[category].filter(item => item.name !== ingredient.name);
+                    this.closest('.option').classList.remove('selected'); // Remove selected class
+                    removeQuantityInput(ingredient.name);
+                }
+
+                updatePreviewAndPrice();
+            });
+        });
+
+        function addQuantityInput(ingredient) {
+            const quantityContainer = document.getElementById('quantity-container');
+            const quantityItem = document.createElement('div');
+            quantityItem.classList.add('quantity-item');
+            quantityItem.id = `quantity-${ingredient.name}`;
+
+            const label = document.createElement('label');
+            label.textContent = `Quantity of ${ingredient.name}: `;
+
+            const input = document.createElement('input');
+            input.type = 'number';
+            input.value = 1;
+            input.min = 1;
+            input.max = 3;
+            input.classList.add('quantity-input');
+            input.addEventListener('input', function () {
+            const quantityerror = document.getElementById('quantityerror');
+                if (this.value > 3) {
+                    this.value = 3;
+                    quantityerror.style.color = "orangered";
+                    quantityerror.textContent = "Quantity is limited to 3";
+                }
+                else{
+                    quantityerror.textContent = "";
+
+                }
+                ingredient.quantity = parseInt(this.value);
+                updatePreviewAndPrice();
+            });
+
+           
+
+            quantityItem.appendChild(label);
+            quantityItem.appendChild(input);
+            quantityContainer.appendChild(quantityItem);
+        }
+
+        function removeQuantityInput(ingredientName) {
+            const quantityItem = document.getElementById(`quantity-${ingredientName}`);
+            if (quantityItem) {
+                quantityItem.remove();
+            }
+        }
+
+        // Order summary
+        const orders = [];
+        function updateOrderSummary() {
+            const orderList = document.getElementById('order-list');
+            orderList.innerHTML = '';
+
+            if (orders.length === 0) {
+                orderList.innerHTML = '<li>No orders yet.</li>';
+                return;
+            }
+
+            orders.forEach(order => {
+                const orderItem = document.createElement('li');
+                orderItem.textContent = `${order.ingredients.join(', ')} - ${order.price.toFixed(2)}`;
+                orderList.appendChild(orderItem);
+            });
+        } 
+
+
+        
+        
+        document.getElementById('add-to-cart').addEventListener('click', function () {
+            const orderData = {
+                ingredients: [],
+                totalPrice: 0
+            };
+        
+            for (let category in selectedIngredients) {
+                selectedIngredients[category].forEach(ingredient => {
+                    const quantity = ingredient.quantity || 1; // Default to 1 if quantity is not defined
+                    orderData.ingredients.push({
+                        name: ingredient.name,
+                        quantity: quantity,
+                        price: ingredient.price,
+                        totalPrice: ingredient.price * quantity
+                    });
+                    orderData.totalPrice += ingredient.price * quantity;
+                });
+            }
+        
+            // Validation for at least one ingredient from each category
+            const categories = ['bun-options', 'protein-options', 'topping-options', 'sauce-options'];
+            const missingCategories = categories.filter(category => selectedIngredients[category].length === 0);
+        
+            if (missingCategories.length > 0) {
+                alert('Please select at least one ingredient from each category.');
+            } else {
+                // Store orderData in sessionStorage before redirecting
+                sessionStorage.setItem('orderData', JSON.stringify(orderData));
+        
+                // Navigate to the place order page
+                window.location.href = "{{ url_for('placeorder') }}";
+            }
+        });
+        
+        
+
+    </script>
+
+</body>
+
+</html>
